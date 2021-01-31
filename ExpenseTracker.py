@@ -26,26 +26,60 @@ class Budget:
         self.amount = amount
         self.isMax = isMax
 
-    def printData(self)
+    def printData(self):
         print(self.category,self.amount,self.isMax)
 
 #gets current time
 day1 = datetime.date.today()
 
 #load expense data
-fh = open("expenses.csv")
-expenseList = []
-for line in fh:
-    data = line.split(',')
-    expense = Expense(data[0],data[1],stringToDate(data[2]),float(data[3]))
-    expenseList.append(expense)
+def loadExpenseData():
+    fh = open("expenses.csv")
+    expenseList = []
+    for line in fh:
+        data = line.split(',')
+        #print(data)
+        expense = Expense(data[0],data[1],stringToDate(data[2]),float(data[3]))
+        expenseList.append(expense)
+    fh.close()
+    return expenseList
+
+def loadBudgetData():
+    fh = open("budget.csv")
+    budgetList = []
+    for line in fh:
+        data = line.split(',')
+        #print(data)
+        if((data[2]) == '0'):
+            isMax = False
+        elif(data[2] == '1'):
+            isMax = True
+        else:
+            print("error reading isMax from data store")
+        budgetCategory = Budget(data[0],float(data[1]),isMax)
+        budgetList.append(budgetCategory)
+    fh.close()
+    return budgetList
+
+expenseData = loadExpenseData()
+budgetData = loadBudgetData()
+
+def getBudgetForCategory(category):
+    for item in budgetData:
+        if(item.category == category):
+            return item.amount
+    return 0
+
+
+
 
 #print expense data and total spend
 #could use if statements to see how much spent per category
 total = 0
-for expense in expenseList:
+for expense in expenseData:
     expense.printData()
     total += expense.amount
+print(getBudgetForCategory("gas"))
 
 print("total spent:",total)
     
@@ -55,7 +89,6 @@ print("total spent:",total)
 
 
 
-fh.close()
 
 
         
