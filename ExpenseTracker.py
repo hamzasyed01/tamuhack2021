@@ -74,12 +74,21 @@ def setBudget():
 
 def showBudget():
     print('\n')
+    categoryList = []
+    values = []
     budgetData = loadBudgetData()
     totalBudget = 0
     for item in budgetData:
         item.printData()
         totalBudget += item.amount
-    print("Total Budget:",str(round(totalBudget,2)))
+        categoryList.append(item.category)
+        values.append(item.amount)
+    plt.pie(values, labels=categoryList,autopct='%1.1f%%')
+    plt.axis("equal")
+    plt.title("Budget Breakdown by Category")
+    plt.show()
+    print("\nTotal Budget:",str(round(totalBudget,2)))
+
 
 def getBudgetForCategory(category):
     budgetData = loadBudgetData()
